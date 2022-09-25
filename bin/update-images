@@ -1,0 +1,16 @@
+#!/bin/bash
+
+ROOT=$PWD
+for row in $(echo "${IMAGES}" | jq -r '.[] | @base64'); do
+  _jq() {
+    echo ${row} | base64 --decode | jq -r ${1}
+  }
+  NAMESPACE=$(_jq '.namespace')
+  TARGET=$(_jq '.target')
+  NEWIMAGE=$(_jq '.newImage')
+  cd $ROOT/$NAMESPACE
+  kustomize edit set image $TARGET=$NEWIMAGE
+  git add .
+  git commit -m "Update $NAMESPACE/$TARGET to $NEWIMAGE"
+  cd $ROOT
+done

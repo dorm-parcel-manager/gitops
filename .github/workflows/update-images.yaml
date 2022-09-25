@@ -1,0 +1,45 @@
+name: Update Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      images:
+        description: "List of images to update"
+        required: true
+        type: string
+      email:
+        required: true
+        type: string
+      name:
+        required: true
+        type: string
+
+jobs:
+  update-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup jq
+        run: |
+          sudo wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O /usr/bin/jq
+
+      - name: Setup kustomize
+        run: |
+          wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.5.7/kustomize_v4.5.7_linux_amd64.tar.gz
+          sudo tar -xf kustomize_v4.5.7_linux_amd64.tar.gz -C /usr/bin
+
+      - name: Update images
+        run: |
+          export IMAGES=$(echo "${{ github.event.inputs.images }}" | base64 --decode)
+          git config --local user.email "${{ github.event.inputs.email }}"
+          git config --local user.name "${{ github.event.inputs.name }}"
+          ./bin/update-images
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}

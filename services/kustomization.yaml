@@ -1,0 +1,10 @@
+namespace: dpm
+resources:
+- user.yaml
+- namespace.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: user
+  newName: ghcr.io/dorm-parcel-manager/dpm/user
+  newTag: latest
