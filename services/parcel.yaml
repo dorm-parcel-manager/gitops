@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parcel
+spec:
+  selector:
+    matchLabels:
+      app: parcel
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: parcel
+    spec:
+      containers:
+      - name: parcel
+        image: parcel
+        env:
+        - name: SERVER_PORT
+          value: "4000"
+        - name: CLIENT_USERSERVICEURL
+          value: user.dpm.svc.cluster.local:4000
+        - name: DB_HOST
+          value: postgres.dpm.svc.cluster.local
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: dpm
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: password
+        - name: DB_DBNAME
+          value: dpm
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: parcel
+  labels:
+    app: parcel
+spec:
+  ports:
+  - port: 4000
+    protocol: TCP
+  selector:
+    app: parcel
