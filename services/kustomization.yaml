@@ -5,6 +5,9 @@ resources:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
+- digest: sha256:6932d8a27eac14930f18ed04fba94005dc2708d3ef7801dbb404b020a8b10f48
+  name: parcel
+  newName: ghcr.io/dorm-parcel-manager/dpm/parcel
 - digest: sha256:b2b509f091c1620b21ead58773f69802890b0a0d11bf110a145a764cfc1e212a
   name: user
   newName: ghcr.io/dorm-parcel-manager/dpm/user
