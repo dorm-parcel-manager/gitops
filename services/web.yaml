@@ -30,3 +30,18 @@ spec:
     protocol: TCP
   selector:
     app: web
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: web-ingress
+
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`dpm.suphon.dev`)
+    services:
+    - name: web
+      port: 3000
