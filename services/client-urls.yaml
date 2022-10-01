@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: client-urls
+data:
+  CLIENT_USERSERVICEURL: user.dpm.svc.cluster.local:4000
+  CLIENT_PARCELSERVICEURL: parcel.dpm.svc.cluster.local:4000

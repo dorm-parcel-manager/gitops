@@ -4,6 +4,7 @@ resources:
 - parcel.yaml
 - web.yaml
 - namespace.yaml
+- client-urls.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
