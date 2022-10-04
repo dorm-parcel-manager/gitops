@@ -15,6 +15,19 @@ spec:
       containers:
       - name: web
         image: web
+        env:
+        - name: BASE_URL
+          value: https://dpm.suphon.dev
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth-client
+              key: client-id
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: google-oauth-client
+              key: client-secret
         envFrom:
         - configMapRef:
             name: client-urls
