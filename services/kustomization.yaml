@@ -14,7 +14,7 @@ images:
 - digest: sha256:db5ceeda14c80230d6780a2dcdd69ea8b6968e54e5adc581ed9eb840087837b1
   name: parcel
   newName: ghcr.io/dorm-parcel-manager/dpm/parcel
-- digest: sha256:be28f044d8db922bfbfc7c86c2ae5ba1aa418413608b43865aa2534d442f46b2
+- digest: sha256:8f95379e3c4ccfbd7de0a0152b7300a608cc1f2bdf97fc7cdb73ec638b97faf0
   name: user
   newName: ghcr.io/dorm-parcel-manager/dpm/user
 - digest: sha256:9250f0fb81de4bb3c3d484f544812142f488b4dcfb48d52bf8393192336a020c
