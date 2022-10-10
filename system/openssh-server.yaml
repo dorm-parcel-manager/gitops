@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openssh-server
+  namespace: dpm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openssh-server
+  serviceName: openssh-server
+  template:
+    metadata:
+      labels:
+        app: openssh-server
+    spec:
+      containers:
+        - image: lscr.io/linuxserver/openssh-server:version-8.8_p1-r1
+          name: openssh-server
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: UTC
+          - name: DOCKER_MODS
+            value: linuxserver/mods:openssh-server-ssh-tunnel
+          - name: USER_NAME
+            value: dpm
+          - name: PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: openssh-server
+                key: publickey
+          ports:
+            - containerPort: 2222
+              name: openssh-server
+          volumeMounts:
+            - mountPath: /config
+              name: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      namespace: dpm
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10G
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openssh-server
+  namespace: dpm
+spec:
+  ports:
+  - name: openssh-server
+    port: 2222
+    targetPort: 2222
+  selector:
+    app: openssh-server
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: openssh-server-ingress
+  namespace: dpm
+
+spec:
+  entryPoints:
+    - openssh
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: openssh-server
+      port: 2222

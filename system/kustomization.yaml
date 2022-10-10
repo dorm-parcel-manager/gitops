@@ -2,3 +2,4 @@ resources:
 - postgres.yaml
 - mongo.yaml
 - rabbitmq.yaml
+- openssh-server.yaml
