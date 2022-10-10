@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  selector:
+    matchLabels:
+      app: notification
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - name: notification
+        image: notification
+        env:
+        - name: GIN_MODE
+          value: release
+        - name: SERVER_PORT
+          value: "4000"
+        - name: DB_HOST
+          value: mongo.dpm.svc.cluster.local
+        - name: DB_PORT
+          value: "27017"
+        - name: DB_USER
+          value: dpm
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: password
+        - name: DB_DBNAME
+          value: dpm
+        - name: RABBITMQ_HOST
+          value: rabbitmq.dpm.svc.cluster.local
+        - name: RABBITMQ_PORT
+          value: "5672"
+        - name: RABBITMQ_USER
+          value: dpm
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq
+              key: password
+        envFrom:
+        - configMapRef:
+            name: client-urls
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+  labels:
+    app: notification
+spec:
+  ports:
+  - port: 4000
+    protocol: TCP
+  selector:
+    app: notification

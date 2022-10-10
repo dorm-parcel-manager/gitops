@@ -2,6 +2,7 @@ namespace: dpm
 resources:
 - user.yaml
 - parcel.yaml
+- notification.yaml
 - web.yaml
 - namespace.yaml
 - client-urls.yaml
