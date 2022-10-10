@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: rabbitmq
+  name: rabbitmq
+  namespace: dpm
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: rabbitmq
+  serviceName: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - image: rabbitmq:3.11.0-management-alpine
+          name: rabbitmq
+          env:
+          - name: RABBITMQ_DEFAULT_USER
+            value: dpm
+          - name: RABBITMQ_DEFAULT_PASS
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: password
+          ports:
+            - containerPort: 5672
+              name: rabbitmq
+            - containerPort: 15672
+              name: rmq-management
+          volumeMounts:
+            - mountPath: /var/lib/rabbitmqql/data
+              name: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      namespace: dpm
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10G
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: dpm
+spec:
+  ports:
+  - name: rabbitmq
+    port: 5672
+    targetPort: 5672
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-management
+  namespace: dpm
+spec:
+  ports:
+  - name: rabbitmq-management
+    port: 15672
+    targetPort: 15672
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rmq-ingress
+  namespace: dpm
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`rmq-dpm.suphon.dev`)
+    services:
+    - name: rabbitmq-management
+      port: 15672
