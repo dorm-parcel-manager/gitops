@@ -18,6 +18,6 @@ images:
 - digest: sha256:6c758781e42e7bdfc7512b5320c8e027b4e485d6140ee1a43921ef595b86afbc
   name: user
   newName: ghcr.io/dorm-parcel-manager/dpm/user
-- digest: sha256:f545467b600e85156182e76807353d8231615cb5ebcab1a14f95bb442eccb130
+- digest: sha256:3d42ff4ccd2b2db70696bb4d2f767f8a848435da64f089e24423efac720a7cd3
   name: web
   newName: ghcr.io/dorm-parcel-manager/dpm-web
