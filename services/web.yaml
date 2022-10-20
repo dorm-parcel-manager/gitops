@@ -28,6 +28,11 @@ spec:
             secretKeyRef:
               name: google-oauth-client
               key: client-secret
+        - name: DEBUG_MODE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: debug-mode
+              key: password
         envFrom:
         - configMapRef:
             name: client-urls
