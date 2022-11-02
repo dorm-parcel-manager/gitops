@@ -9,7 +9,7 @@ resources:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- digest: sha256:db85da3822ca87432045e8c8443ea99941d7aae12d9f2b488cbe898ef8b3b678
+- digest: sha256:867dabc5242a8b1176b41717e5cdbbc5ee402ea796fd5cf9b501fabfee57320a
   name: notification
   newName: ghcr.io/dorm-parcel-manager/dpm/notification
 - digest: sha256:a8dd9920831ebdbbd131269fe30f8965687fd59a78ed6015740d67b2e8ad0678
