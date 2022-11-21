@@ -47,6 +47,8 @@ spec:
         envFrom:
         - configMapRef:
             name: client-urls
+        - secretRef:
+            name: vapid-key-pair
       imagePullSecrets:
       - name: regcred
 ---
